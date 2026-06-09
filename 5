@@ -1,0 +1,48 @@
+import tkinter as tk
+
+INSIDE = 0
+LEFT = 1
+RIGHT = 2
+BOTTOM = 4
+TOP = 8
+
+def compute_code(x, y, x_min, y_min, x_max, y_max):
+    code = INSIDE
+
+    if x < x_min:
+        code |= LEFT
+    elif x > x_max:
+        code |= RIGHT
+
+    if y < y_min:
+        code |= BOTTOM
+    elif y > y_max:
+        code |= TOP
+
+    return code
+
+def cohen_sutherland_clip(
+        x1, y1, x2, y2,
+        x_min, y_min, x_max, y_max):
+
+    code1 = compute_code(
+        x1, y1,
+        x_min, y_min,
+        x_max, y_max
+    )
+
+    code2 = compute_code(
+        x2, y2,
+        x_min, y_min,
+        x_max, y_max
+    )
+
+    accept = False
+
+    while True:
+
+        if code1 == 0 and code2 == 0:
+            accept = True
+            break
+
+        elif (code1
