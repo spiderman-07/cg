@@ -1,0 +1,103 @@
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+
+angle = 0
+
+def init():
+    glClearColor(0.0, 0.0, 0.0, 1.0)
+    glEnable(GL_DEPTH_TEST)
+
+def display():
+    global angle
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+    glLoadIdentity()
+
+    gluLookAt(
+        0, 0, 8,
+        0, 0, 0,
+        0, 1, 0
+    )
+
+    glRotatef(angle, 1, 1, 0)
+
+    # Cube
+    glColor3f(1.0, 0.0, 0.0)
+    glutWireCube(2)
+
+    glPushMatrix()
+
+    glTranslatef(3, 0, 0)
+
+    # Sphere
+    glColor3f(0.0, 1.0, 0.0)
+    glutWireSphere(1, 20, 20)
+
+    glPopMatrix()
+
+    glutSwapBuffers()
+
+def reshape(w, h):
+
+    glViewport(0, 0, w, h)
+
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+
+    gluPerspective(
+        45,
+        float(w) / float(h),
+        1,
+        50
+    )
+
+    glMatrixMode(GL_MODELVIEW)
+
+def timer(value):
+    global angle
+
+    angle += 1
+
+    if angle > 360:
+        angle = 0
+
+    glutPostRedisplay()
+
+    glutTimerFunc(
+        16,
+        timer,
+        0
+    )
+
+def main():
+
+    glutInit()
+
+    glutInitDisplayMode(
+        GLUT_DOUBLE |
+        GLUT_RGB |
+        GLUT_DEPTH
+    )
+
+    glutInitWindowSize(800, 600)
+
+    glutCreateWindow(
+        b"OpenGL 3D Objects"
+    )
+
+    init()
+
+    glutDisplayFunc(display)
+    glutReshapeFunc(reshape)
+
+    glutTimerFunc(
+        0,
+        timer,
+        0
+    )
+
+    glutMainLoop()
+
+main()
